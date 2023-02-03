@@ -23,7 +23,7 @@ def test_get_point(publish_agent):
 
 
 def test_set_point(publish_agent):
-    point_name = "SupplyTemp"
+    point_name = "SecondStageCoolingDemandSetPoint"
     point_val = 42
     publish_agent.vip.rpc.call(PLATFORM_DRIVER, "set_point", "modbustk", point_name,
                                point_val).get(timeout=10)
@@ -65,7 +65,8 @@ def publish_agent(volttron_instance: PlatformWrapper):
     registry_config_string = """Register Name,Address,Type,Units,Writable
         SupplyTemp,0,uint16,degC,FALSE
         ReturnTemp,1,uint16,degC,FALSE
-        OutsideTemp,2,uint16,degC,FALSE"""
+        OutsideTemp,2,uint16,degC,FALSE
+        SecondStageCoolingDemandSetPoint,14,uint16,degC,TRUE"""
     publish_agent.vip.rpc.call(CONFIGURATION_STORE,
                                "manage_store",
                                PLATFORM_DRIVER,
@@ -77,7 +78,8 @@ def publish_agent(volttron_instance: PlatformWrapper):
     registry_config_string = """Register Name,Volttron Point Name
         SupplyTemp,SupplyTemp
         ReturnTemp,ReturnTemp
-        OutsideTemp,OutsideTemp"""
+        OutsideTemp,OutsideTemp
+        SecondStageCoolingDemandSetPoint,SecondStageCoolingDemandSetPoint"""
     publish_agent.vip.rpc.call(CONFIGURATION_STORE,
                                "manage_store",
                                PLATFORM_DRIVER,
@@ -111,7 +113,7 @@ def publish_agent(volttron_instance: PlatformWrapper):
                                jsonapi.dumps(driver_config),
                                config_type='json')
 
-    gevent.sleep(240)
+    gevent.sleep(40)
 
     yield publish_agent
 

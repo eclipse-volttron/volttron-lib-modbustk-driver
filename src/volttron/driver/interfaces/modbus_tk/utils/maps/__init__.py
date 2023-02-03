@@ -36,8 +36,8 @@
 # under Contract DE-AC05-76RL01830
 # }}}
 
-from platform_driver.interfaces.modbus_tk.client import Field, Client
-from platform_driver.interfaces.modbus_tk import helpers
+from volttron.driver.interfaces.modbus_tk.utils.client import Field, Client
+from volttron.driver.interfaces.modbus_tk.utils import helpers
 from collections.abc import Mapping
 
 import csv
