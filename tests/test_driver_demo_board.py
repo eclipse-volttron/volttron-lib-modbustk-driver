@@ -60,6 +60,7 @@ def publish_agent(volttron_instance: PlatformWrapper):
 
     capabilities = {"edit_config_store": {"identity": PLATFORM_DRIVER}}
     volttron_instance.add_capabilities(publish_agent.core.publickey, capabilities)
+    gevent.sleep(1)
 
     # Add Modbus Driver TK registry map to Platform Driver
     registry_config_string = """Register Name,Address,Type,Units,Writable
@@ -72,7 +73,7 @@ def publish_agent(volttron_instance: PlatformWrapper):
                                PLATFORM_DRIVER,
                                "m2000_rtu_TK_map.csv",
                                registry_config_string,
-                               config_type="csv")
+                               config_type="csv").get(timeout=10)
 
     # Add Modbus Driver registry to Platform Driver
     registry_config_string = """Register Name,Volttron Point Name
@@ -85,7 +86,7 @@ def publish_agent(volttron_instance: PlatformWrapper):
                                PLATFORM_DRIVER,
                                "m2000_rtu_TK.csv",
                                registry_config_string,
-                               config_type="csv")
+                               config_type="csv").get(timeout=10)
 
     # Add Modbus Driver config to Platform Driver
     device_address = os.environ.get(MODBUS_TEST_IP)
@@ -111,9 +112,7 @@ def publish_agent(volttron_instance: PlatformWrapper):
                                PLATFORM_DRIVER,
                                "devices/modbustk",
                                jsonapi.dumps(driver_config),
-                               config_type='json')
-
-    gevent.sleep(40)
+                               config_type='json').get(timeout=10)
 
     yield publish_agent
 
