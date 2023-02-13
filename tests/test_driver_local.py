@@ -3,7 +3,6 @@ import json
 import logging
 import pytest
 import socket
-import time
 
 from random import randint
 from struct import pack, unpack
@@ -233,7 +232,7 @@ def modbus_server():
                              unpack('<HHHH', pack('>q', 0)))
 
     modbus_server.start()
-    time.sleep(1)
+    gevent.sleep(10)
     yield modbus_server
     modbus_server.stop()
 
