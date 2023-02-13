@@ -165,7 +165,7 @@ class CSVRegister:
 
         try:
             if csv_transform:
-                match = re.match(r'(\w+)\(([a-zA-z0-9.]*)\)', csv_transform)
+                match = re.match(r'(\w+)\(([a-zA-Z0-9.]*)\)', csv_transform)
                 func = match.group(1)
                 arg = match.group(2)
 
