@@ -196,7 +196,7 @@ class PPSPi32Client(Client):
                        helpers.REGISTER_READ_WRITE, helpers.OP_MODE_READ_WRITE)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")  # TODO: Why does second test fail with this as a function-scoped fixture?
 def modbus_server():
     modbus_server = Server(address=IP, port=PORT)
     modbus_server.define_slave(1, PPSPi32Client, unsigned=True)
@@ -232,7 +232,7 @@ def modbus_server():
                              unpack('<HHHH', pack('>q', 0)))
 
     modbus_server.start()
-    gevent.sleep(10)
+    gevent.sleep(1)
     yield modbus_server
     modbus_server.stop()
 
@@ -252,11 +252,10 @@ def test_default_values(modbus_server, publish_agent):
 def test_set_point(modbus_server, publish_agent):
     for key in REGISTERS_DICT.keys():
         publish_agent.vip.rpc.call(PLATFORM_DRIVER, 'set_point', 'modbus', key,
-                                   REGISTERS_DICT[key]).get(timeout=20)
-        gevent.sleep(5)
+                                   REGISTERS_DICT[key]).get(timeout=10)
+
         assert publish_agent.vip.rpc.call(PLATFORM_DRIVER, 'get_point', 'modbus',
-                                   key).get(timeout=20) == REGISTERS_DICT[key]
-        gevent.sleep(5)
+                                   key).get(timeout=10) == REGISTERS_DICT[key]
 
     assert publish_agent.vip.rpc.call(PLATFORM_DRIVER, 'scrape_all',
-                                      'modbus').get(timeout=20) == REGISTERS_DICT
+                                      'modbus').get(timeout=10) == REGISTERS_DICT
