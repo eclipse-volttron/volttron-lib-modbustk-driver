@@ -14,7 +14,7 @@ ignore_missing_imports = true
 
 [tool.poetry]
 name = "volttron-lib-modbustk-driver"
-version = "0.0.0"
+version = "0.1.0"
 description = "ModbusTK Driver supported and maintained by the Volttron team."
 authors = ["Mark Bonicillo <volttron@pnnl.gov>"]
 license = "Apache License 2.0"
