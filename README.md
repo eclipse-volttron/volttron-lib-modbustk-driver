@@ -5,29 +5,32 @@
 
 VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alternative to the original VOLTTRON modbus driver. Unlike the original modbus driver, the Modbus-TK driver supports Modbus RTU as well as Modbus over TCP/IP.
 
-# Prerequisites
+# Requires
 
-* Python 3.8
+* python >= 3.10
+* volttron >= 10.0
+* volttron-lib-base-driver
+* modbus-tk >= 1.1.2
+* pyserial >= 3.5
+* PyYAML >= 6.0
+
+
+# Documentation
+More detailed documentation can be found on [ReadTheDocs](https://volttron.readthedocs.io/en/modular/). The RST source
+of the documentation for this component is located in the "docs" directory of this repository.
+
+
+# Documentation
+More detailed documentation can be found on [ReadTheDocs](https://volttron.readthedocs.io/en/modular/). The RST source
+of the documentation for this component is located in the "docs" directory of this repository.
 
 # Installation
 
-1. Create and activate a virtual environment.
+Before installing, VOLTTRON should be installed and running.  Its virtual environment should be active.
+Information on how to install of the VOLTTRON platform can be found
+[here](https://github.com/eclipse-volttron/volttron-core).
 
-    ```shell
-    python -m venv env
-    source env/bin/activate
-    ```
-
-1. Install volttron and start the platform.
-
-    ```shell
-    pip install volttron
-
-    # Start platform with output going to volttron.log
-    volttron -vv -l volttron.log &
-    ```
-
-1. Install the volttron platform driver:
+1. If it is not already, install the VOLTTRON Platform Driver Agent:
 
     ```shell
     vctl install volttron-platform-driver --vip-identity platform.driver --start

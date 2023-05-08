@@ -14,7 +14,7 @@ ignore_missing_imports = true
 
 [tool.poetry]
 name = "volttron-lib-modbustk-driver"
-version = "0.0.0"
+version = "0.1.0"
 description = "ModbusTK Driver supported and maintained by the Volttron team."
 authors = ["Mark Bonicillo <volttron@pnnl.gov>"]
 license = "Apache License 2.0"
@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+python = ">=3.10,<4.0"
 volttron-lib-base-driver="^0.2.0rc0"
 modbus-tk = "^1.1.2"
 pyserial = "^3.5"
