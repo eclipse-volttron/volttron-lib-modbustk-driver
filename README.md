@@ -3,7 +3,7 @@
 ![Passing?](https://github.com/VOLTTRON/volttron-lib-modbustk-driver/actions/workflows/run-tests.yml/badge.svg)
 [![pypi version](https://img.shields.io/pypi/v/volttron-lib-modbustk-driver.svg)](https://pypi.org/project/volttron-lib-modbustk-driver/)
 
-VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alternative to the original VOLTTRON modbus driver. Unlike the original modbus driver, the Modbus-TK driver supports Modbus RTU as well as Modbus over TCP/IP.
+Eclipse VOLTTRON<sup>tm</sup>’s Modbus-TK driver, built on the Python Modbus-TK library, is an alternative to the original Eclipse VOLTTRON<sup>tm</sup>(VOLTTRON/volttron) modbus driver. Unlike the original modbus driver, the Modbus-TK driver supports Modbus RTU as well as Modbus over TCP/IP.
 
 # Requires
 
