@@ -1,47 +1,33 @@
 # -*- coding: utf-8 -*- {{{
-# vim: set fenc=utf-8 ft=python sw=4 ts=4 sts=4 et:
+# ===----------------------------------------------------------------------===
 #
-# Copyright 2020, Battelle Memorial Institute.
+#                 Installable Component of Eclipse VOLTTRON
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# ===----------------------------------------------------------------------===
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+# Copyright 2022 Battelle Memorial Institute
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy
+# of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
 #
-# This material was prepared as an account of work sponsored by an agency of
-# the United States Government. Neither the United States Government nor the
-# United States Department of Energy, nor Battelle, nor any of their
-# employees, nor any jurisdiction or organization that has cooperated in the
-# development of these materials, makes any warranty, express or
-# implied, or assumes any legal liability or responsibility for the accuracy,
-# completeness, or usefulness or any information, apparatus, product,
-# software, or process disclosed, or represents that its use would not infringe
-# privately owned rights. Reference herein to any specific commercial product,
-# process, or service by trade name, trademark, manufacturer, or otherwise
-# does not necessarily constitute or imply its endorsement, recommendation, or
-# favoring by the United States Government or any agency thereof, or
-# Battelle Memorial Institute. The views and opinions of authors expressed
-# herein do not necessarily state or reflect those of the
-# United States Government or any agency thereof.
-#
-# PACIFIC NORTHWEST NATIONAL LABORATORY operated by
-# BATTELLE for the UNITED STATES DEPARTMENT OF ENERGY
-# under Contract DE-AC05-76RL01830
+# ===----------------------------------------------------------------------===
 # }}}
 
 import cmd
 import os
 
-import subprocess32
+import subprocess
 import yaml
-from volttron.interfaces.helpers import str2bool
+from volttron.driver.interfaces.modbus_tk.utils.helpers import str2bool
 from volttron.utils import jsonapi
 
 
@@ -76,7 +62,7 @@ class ConfigCmd(cmd.Cmd):
         yaml_file = "{0}/{1}".format(self._directories['map_dir'], file_name)
         if file_name and os.stat(yaml_file).st_size:
             with open("{0}/maps.yaml".format(self._directories['map_dir'])) as yaml_file:
-                device_type_maps = yaml.load(yaml_file)
+                device_type_maps = yaml.safe_load(yaml_file)
         return device_type_maps
 
     def _sh(self, shell_command):
@@ -84,13 +70,13 @@ class ConfigCmd(cmd.Cmd):
             Run shell command
         """
         try:
-            return_value = subprocess32.check_output(shell_command,
-                                                     shell=True,
-                                                     stderr=subprocess32.PIPE,
-                                                     timeout=5)
-        except subprocess32.TimeoutExpired:
+            return_value = subprocess.check_output(shell_command,
+                                                   shell=True,
+                                                   stderr=subprocess.PIPE,
+                                                   timeout=5)
+        except subprocess.TimeoutExpired:
             return_value = "Timeout Error: Volttron is not running"
-        except subprocess32.CalledProcessError:
+        except subprocess.CalledProcessError:
             return_value = "File does not exist in Volttron"
         return return_value
 
@@ -337,7 +323,7 @@ class ConfigCmd(cmd.Cmd):
             for device_type in self._device_type_maps:
                 print("\nDEVICE TYPE: {0}".format(device_type['name'].upper()))
                 for k in device_type.keys():
-                    if k is not 'name':
+                    if k != 'name':
                         print("{0:25} | {1}".format(k, device_type[k]))
 
             print('\nDo you want to add or edit a device type [add/edit]? Press <Enter> to exit: ',
@@ -371,7 +357,7 @@ class ConfigCmd(cmd.Cmd):
                 existed = True
                 print("\nDEVICE TYPE: {0}".format(device_type['name'].upper()))
                 for k in device_type.keys():
-                    if k is not 'name':
+                    if k != 'name':
                         print("{0:25} | {1}".format(k, device_type[k]))
 
         if not existed:

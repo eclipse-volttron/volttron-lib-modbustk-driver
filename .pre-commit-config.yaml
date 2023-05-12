@@ -26,8 +26,6 @@ repos:
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.2.0
   hooks:
-  - id: pretty-format-toml
-    args: [--autofix]
   - id: pretty-format-yaml
     args: [--autofix]
     exclude: .copier-answer.yml
@@ -43,12 +41,6 @@ repos:
     pass_filenames: false
     files: pyproject.toml
 
-- repo: https://github.com/pycqa/isort
-  rev: 5.6.4
-  hooks:
-  - id: isort
-    args: [--profile, black, --filter-files]
-
 # For more information about YAPF, see https://github.com/google/yapf
 - repo: https://github.com/craig8/mirrors-yapf
   rev: b84f670025671a341d0afd2b06b877b195d65c0f  # Use the sha / tag you want to point at
@@ -58,13 +50,4 @@ repos:
     description: A formatter for Python files.
     entry: yapf
     language: python
-    types: [python]
-
-- repo: local
-  hooks:
-  - id: pytest
-    name: Run tests
-    entry: poetry run pytest
-    pass_filenames: false
-    language: system
     types: [python]

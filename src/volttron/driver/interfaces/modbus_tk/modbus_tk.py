@@ -1,71 +1,44 @@
 # -*- coding: utf-8 -*- {{{
-# vim: set fenc=utf-8 ft=python sw=4 ts=4 sts=4 et:
+# ===----------------------------------------------------------------------===
 #
-# Copyright 2020, Battelle Memorial Institute.
+#                 Installable Component of Eclipse VOLTTRON
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# ===----------------------------------------------------------------------===
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+# Copyright 2022 Battelle Memorial Institute
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy
+# of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
 #
-# This material was prepared as an account of work sponsored by an agency of
-# the United States Government. Neither the United States Government nor the
-# United States Department of Energy, nor Battelle, nor any of their
-# employees, nor any jurisdiction or organization that has cooperated in the
-# development of these materials, makes any warranty, express or
-# implied, or assumes any legal liability or responsibility for the accuracy,
-# completeness, or usefulness or any information, apparatus, product,
-# software, or process disclosed, or represents that its use would not infringe
-# privately owned rights. Reference herein to any specific commercial product,
-# process, or service by trade name, trademark, manufacturer, or otherwise
-# does not necessarily constitute or imply its endorsement, recommendation, or
-# favoring by the United States Government or any agency thereof, or
-# Battelle Memorial Institute. The views and opinions of authors expressed
-# herein do not necessarily state or reflect those of the
-# United States Government or any agency thereof.
-#
-# PACIFIC NORTHWEST NATIONAL LABORATORY operated by
-# BATTELLE for the UNITED STATES DEPARTMENT OF ENERGY
-# under Contract DE-AC05-76RL01830
+# ===----------------------------------------------------------------------===
 # }}}
 
 import logging
-import re
 import struct
 
 from gevent import monkey
-from volttron.driver.base.interfaces import BaseInterface, BaseRegister, BasicRevert
-from volttron.utils.logs import setup_logging
-
-from volttron.driver.interfaces.modbustk import helpers
-from volttron.driver.interfaces.modbustk.maps import Map
 
 monkey.patch_socket()
 
-modbus_logger = logging.getLogger("pymodbus")
+from volttron.utils.logs import setup_logging
+from volttron.driver.base.interfaces import (BaseInterface, BaseRegister, BasicRevert)
+from volttron.driver.interfaces.modbus_tk.utils import helpers
+from volttron.driver.interfaces.modbus_tk.utils.maps import Map
+
+modbus_logger = logging.getLogger("modbus_tk")
 modbus_logger.setLevel(logging.WARNING)
 
 setup_logging()
 _log = logging.getLogger(__name__)
-
-parity_map = dict(none='N', even='E', odd='O', mark='M', space='S')
-
-config_keys = [
-    "name", "device_type", "device_address", "port", "slave_id", "baudrate", "bytesize", "parity",
-    "stopbits", "xonxoff", "addressing", "endian", "write_multiple_registers", "register_map"
-]
-
-register_map_columns = [
-    "register name", "address", "type", "units", "writable", "default value", "transform", "table",
-    "mixed endian", "description"
-]
 
 
 class ModbusInterfaceException(Exception):
@@ -74,7 +47,7 @@ class ModbusInterfaceException(Exception):
 
 class ModbusTKRegister(BaseRegister):
     """
-        Modbus TK register class.
+    Modbus TK register class.
 
     :param point_name: the register point name
     :param default_value: the default value of writable register
@@ -100,7 +73,7 @@ class ModbusTKRegister(BaseRegister):
 
     def get_python_type(self, datatype):
         """
-            Get python type from field data type
+        Get python type from field data type
 
         :param datatype: register type
 
@@ -126,7 +99,7 @@ class ModbusTKRegister(BaseRegister):
 
     def get_default_value(self, datatype, str_value):
         """
-            Convert default value from str to the register type
+        Convert default value from str to the register type
 
         :param datatype: register type
         :param str_value: default value in str
@@ -152,7 +125,7 @@ class ModbusTKRegister(BaseRegister):
 
     def get_state(self, modbus_client):
         """
-            Read value of the register and return it
+        Read value of the register and return it
 
         :param modbus_client: the modbus tk client parsed from configure
 
@@ -163,7 +136,7 @@ class ModbusTKRegister(BaseRegister):
 
     def set_state(self, modbus_client, value):
         """
-            Set value for the register and return the actual value that is set
+        Set value for the register and return the actual value that is set
 
         :param modbus_client: the modbus tk client that is parsed from configure
         :param value: setting value for writable register
@@ -188,62 +161,28 @@ class ModbusTK(BasicRevert, BaseInterface):
     :type modbus_client: Client
     """
 
+    ##### static attributes of class
+    parity_map = dict(none='N', even='E', odd='O', mark='M', space='S')
+    config_keys = [
+        "name", "device_type", "device_address", "port", "slave_id", "baudrate", "bytesize",
+        "parity", "stopbits", "xonxoff", "addressing", "endian", "write_multiple_registers",
+        "register_map"
+    ]
+    register_map_columns = [
+        "register name", "address", "type", "units", "writable", "default value", "transform",
+        "table", "mixed endian", "description"
+    ]
+
     def __init__(self, **kwargs):
         super(ModbusTK, self).__init__(**kwargs)
         self.name_map = dict()
         self.modbus_client = None
 
-    def insert_register(self, register):
-        """
-            Insert register into ModbusTKRegister
-
-        :param register: register to add to the interface
-
-        :type register: ModbusTKRegister
-        """
-        super(Interface, self).insert_register(register)
-        self.name_map[register.name] = register.point_name
-
-    def parse_registry_config(self, old_registry_config_lst):
-        """
-            Convert original modbus csv format to the new modbus_tk registry_config_lst
-
-        :param old_registry_config_lst: list of all register dictionaries in old volttron csv format
-
-        :type old_registry_config_lst: list
-        """
-        new_registry_config_lst = []
-        for reg_dict in old_registry_config_lst:
-            point_name = reg_dict.get('volttron point name')
-            register_name = reg_dict.get('reference point name', point_name).replace(" ",
-                                                                                     "_").lower()
-            address = reg_dict.get('point address')
-            datatype = reg_dict['modbus register']
-
-            unit = reg_dict.get('units')
-            writable = reg_dict.get('writable')
-            default_value = reg_dict.get('default value', None)
-            description = reg_dict.get('notes', '')
-            mixed_endian = reg_dict.get('mixed endian', 'false').lower()
-
-            new_registry_config_lst.append({
-                'volttron point name': point_name,
-                'register name': register_name,
-                'address': address,
-                'type': datatype,
-                'units': unit,
-                'writable': writable,
-                'default value': default_value,
-                'mixed endian': mixed_endian,
-                'description': description
-            })
-
-        return new_registry_config_lst
-
+    ##### Implemented abstract methods from BaseInterface
     def configure(self, config_dict, registry_config_lst):
         """
-            Parse driver and csv config to define client transport, add registers to ModbusTKRegister,
-            and set default values for revert reading
+        Parse driver and csv config to define client transport, add registers to ModbusTKRegister,
+        and set default values for revert reading
 
         :param config_dict: dictionary of device configure
         :param registry_config_lst: the list of all register dictionary parsed from the csv file
@@ -268,7 +207,7 @@ class ModbusTK(BasicRevert, BaseInterface):
         slave_address = config_dict.get('slave_id', 1)
         baudrate = config_dict.get('baudrate', 9600)
         bytesize = config_dict.get('bytesize', 8)
-        parity = parity_map[config_dict.get('parity', 'none')]
+        parity = ModbusTK.parity_map[config_dict.get('parity', 'none')]
         stopbits = config_dict.get('stopbits', 1)
         xonxoff = config_dict.get('xonxoff', 0)
         addressing = config_dict.get('addressing', helpers.OFFSET).lower()
@@ -287,14 +226,15 @@ class ModbusTK(BasicRevert, BaseInterface):
         ])
 
         # Log warning for ignored config fields
-        ignored_config_keys = [k for k in config_dict.keys() if k not in config_keys]
+        ignored_config_keys = [k for k in config_dict.keys() if k not in ModbusTK.config_keys]
         if ignored_config_keys:
             _log.warning("%s: Ignored config fields: %s", name, ','.join(ignored_config_keys))
 
         try:
             # Log warning for ignored register map csv column
             ignored_register_map_csv_columns = [
-                c for c in list(register_map.values())[0].keys() if c not in register_map_columns
+                c for c in list(register_map.values())[0].keys()
+                if c not in ModbusTK.register_map_columns
             ]
             if ignored_register_map_csv_columns:
                 _log.warning("%s: Ignored register map csv columns: %s", name,
@@ -351,7 +291,7 @@ class ModbusTK(BasicRevert, BaseInterface):
 
     def get_point(self, point_name):
         """
-            Get the value of a point from a device and return it
+        Get the value of a point from a device and return it
 
         :param point_name: register point name
 
@@ -359,9 +299,27 @@ class ModbusTK(BasicRevert, BaseInterface):
         """
         return self.get_register_by_name(point_name).get_state(self.modbus_client)
 
+    ##### Overriden methods from BaseInterface
+
+    def insert_register(self, register):
+        """
+        Insert register into ModbusTKRegister
+
+        :param register: register to add to the interface
+
+        :type register: ModbusTKRegister
+        """
+        super(ModbusTK, self).insert_register(register)
+        self.name_map[register.name] = register.point_name
+
+    ##### Uses implementation from BasicRevert for following BaseInterface abstract methods:
+    ##### set_point, scrape_all, revert_all, revert_point
+
+    ##### Implemented abstract methods from BasicRevert
+
     def _set_point(self, point_name, value):
         """
-            Set the value of a point on a device and ideally return the actual value set
+        Set the value of a point on a device and ideally return the actual value set
 
         :param point_name: register point name
         :param value: setting value for writable register
@@ -372,8 +330,45 @@ class ModbusTK(BasicRevert, BaseInterface):
         return self.get_register_by_name(point_name).set_state(self.modbus_client, value)
 
     def _scrape_all(self):
-        """Get a dictionary mapping point name to values of all defined registers
-        """
+        """Get a dictionary mapping point name to values of all defined registers"""
         return dict((self.name_map[field.name],
                      value.decode('utf-8') if isinstance(value, bytes) else value)
                     for field, value, timestamp in self.modbus_client.dump_all())
+
+    ##### Helper methods
+
+    def parse_registry_config(self, old_registry_config_lst):
+        """
+        Convert original modbus csv format to the new modbus_tk registry_config_lst
+
+        :param old_registry_config_lst: list of all register dictionaries in old volttron csv format
+
+        :type old_registry_config_lst: list
+        """
+        new_registry_config_lst = []
+        for reg_dict in old_registry_config_lst:
+            point_name = reg_dict.get('volttron point name')
+            register_name = reg_dict.get('reference point name', point_name).replace(" ",
+                                                                                     "_").lower()
+            address = reg_dict.get('point address')
+            datatype = reg_dict['modbus register']
+
+            unit = reg_dict.get('units')
+            writable = reg_dict.get('writable')
+            default_value = reg_dict.get('default value', None)
+            description = reg_dict.get('notes', '')
+            mixed_endian = reg_dict.get('mixed endian', 'false').lower()
+
+            new_registry_config_lst.append({
+                'volttron point name': point_name,
+                'register name': register_name,
+                'address': address,
+                'type': datatype,
+                'units': unit,
+                'writable': writable,
+                'default value': default_value,
+                'mixed endian': mixed_endian,
+                'description': description
+            })
+
+        return new_registry_config_lst
