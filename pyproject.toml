@@ -3,13 +3,18 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
+python_version = 3.10
 show_error_context = true
 pretty = true
 show_column_numbers = true
-show_error_codes = true
-exclude = ['docs/']
+warn_return_any = true
+warn_unused_configs = true
 
-[tool.mypy-six.moves]
+[[tool.mypy.overrides]]
+module = [
+    "yaml",
+    "six"
+]
 ignore_missing_imports = true
 
 [tool.poetry]
@@ -68,17 +73,4 @@ ignore_patterns = [
     "docs/**"
 ]
 
-[tool.mypy]
-python_version = 3.10
-show_error_context = true
-pretty = true
-show_column_numbers = true
-warn_return_any = true
-warn_unused_configs = true
 
-[[tool.mypy.overrides]]
-module = [
-    "yaml",
-    "six"
-]
-ignore_missing_imports = true
