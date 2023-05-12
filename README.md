@@ -1,6 +1,6 @@
 # volttron-lib-modbustk-driver
 
-![Eclipse VOLTTRON™](https://img.shields.io/badge/Eclipse%20VOLTTRON™-10.0.4rc-red.svg)
+![Eclipse VOLTTRON™](https://img.shields.io/badge/Eclipse%20VOLTTRON™--red.svg)
 ![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
 ![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
 [![Passing?](https://github.com/VOLTTRON/volttron-lib-modbustk-driver/actions/workflows/run-tests.yml/badge.svg)]
