@@ -5,41 +5,37 @@
 
 VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alternative to the original VOLTTRON modbus driver. Unlike the original modbus driver, the Modbus-TK driver supports Modbus RTU as well as Modbus over TCP/IP.
 
-# Prerequisites
+## Requires
 
-* Python 3.8
+* python >=3.10
+* volttron-lib-base-driver
+* pymodbus >= 2.3.5
+
+
+# Documentation
+More detailed documentation can be found on [ReadTheDocs](https://eclipse-volttron.readthedocs.io/en/latest/external-docs/volttron-platform-driver/docs/source/index.html). The RST source
+of the documentation for this component is located in the "docs" directory of this repository.
+
 
 # Installation
 
-1. Create and activate a virtual environment.
+Before installing, VOLTTRON should be installed and running.  Its virtual environment should be active.
+Information on how to install of the VOLTTRON platform can be found
+[here](https://github.com/eclipse-volttron/volttron-core).
 
-    ```shell
-    python -m venv env
-    source env/bin/activate
-    ```
-
-1. Install volttron and start the platform.
-
-    ```shell
-    pip install volttron
-
-    # Start platform with output going to volttron.log
-    volttron -vv -l volttron.log &
-    ```
-
-1. Install the volttron platform driver:
+1. If it is not already, install the VOLTTRON Platform Driver Agent:
 
     ```shell
     vctl install volttron-platform-driver --vip-identity platform.driver --start
     ```
-
-1. Install the volttron-lib-modbustk-driver library.
+   
+2. Install the volttron-lib-modbustk-driver library.
 
     ```shell
     pip install volttron-lib-modbustk-driver
     ```
 
-1. Install the driver onto the Platform Driver.
+3. Install the driver onto the Platform Driver.
 
     Installing a driver in the Platform Driver Agent requires adding copies of the device configuration and registry configuration files to the Platform Driver’s configuration store.
 
@@ -50,7 +46,7 @@ VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alte
     cd config
     ```
 
-1. Add driver configurations to the Platform Driver.
+4. Add driver configurations to the Platform Driver.
 
    The Modbus-TK driver is mostly backward-compatible with the parameter definitions in the original Modbus driver’s configuration (.config and .csv files). If the config file’s parameter names use the Modbus driver’s name conventions, they are translated to the Modbus-TK name conventions, e.g. a Modbus CSV file’s Point Address is interpreted as a Modbus-TK “Address”. Backward-compatibility exceptions are:
 
@@ -131,7 +127,7 @@ VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alte
     vctl config store platform.driver devices/modbustk modbus_tk_example.config
     ```
 
-1. Add a Modbus-TK Register Map CSV File to the Platform Driver.
+5. Add a Modbus-TK Register Map CSV File to the Platform Driver.
 
     Modbus TK requires an additional registry configuration file compared to the paradigm of most other drivers. The registry map file is an analogue to the typical registry configuration file. The registry configuration file is a simple file which maps device point names to user specified point names.
 
@@ -190,7 +186,7 @@ VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alte
     vctl config store platform.driver modbus_tk_test_map.csv modbus_tk_test_map.csv --csv
     ```
 
-1. Add a registry configuration to the PlatformDriver.
+6. Add a registry configuration to the PlatformDriver.
 
     The registry configuration file is a CSV file. Each row configures a point on the device.
 
@@ -221,7 +217,7 @@ VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alte
     vctl config store platform.driver modbus_tk_test.csv modbus_tk_test.csv --csv
     ```
 
-1. Observe Data
+7. Observe Data
 
     To see data being published to the bus, install a [Listener Agent](https://pypi.org/project/volttron-listener/):
 
