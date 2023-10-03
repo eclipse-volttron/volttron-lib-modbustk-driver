@@ -31,24 +31,6 @@ Modbus-TK "Address". Backward-compatibility exceptions are:
     - If the config file has no ``port``, the default is 0, not 502.
     - If the config file has no ``slave_id``, the default is 1, not 0.
 
-
-Requirements
-------------
-The Modbus-TK driver requires the modbus-tk package. This package can be installed in an
-activated environment with:
-
-.. code-block:: bash
-
-    pip install modbus-tk
-
-Alternatively this requirement can be installed using :ref:`bootstrap.py <Platform-Installation>` with the ``--drivers``
-option:
-
-.. code-block:: bash
-
-    python3 bootstrap.py --drivers
-
-
 Driver Configuration
 --------------------
 
@@ -85,8 +67,8 @@ but only **device_address** is required:
 
     - ``register_map`` (Optional) - Register map csv of unchanged register variables. Defaults to registry_config csv.
 
-Sample Modbus-TK configuration files are checked into the VOLTTRON repository in
-``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps``.
+Sample Modbus-TK configuration files for various devices may be found in `the maps directory of
+the volttron-lib-modbustk-driver repository <https://github.com/eclipse-volttron/volttron-lib-modbustk-driver/tree/develop/src/volttron/driver/interfaces/modbus_tk/utils/maps>`_.
 
 Here is a sample TCP/IP Modbus-TK device configuration:
 
@@ -194,8 +176,9 @@ Each row configures a register definition on the device.
 
 Any additional columns are ignored.
 
-Sample Modbus-TK registry map CSV files are checked into the VOLTTRON repository in
-``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps``.
+Sample Modbus-TK registry map CSV files for various devices may be found in `the maps directory of
+the volttron-lib-modbustk-driver repository <https://github.com/eclipse-volttron/volttron-lib-modbustk-driver/tree/develop/src/volttron/driver/interfaces/modbus_tk/utils/maps>`_.
+
 
 Here is a sample Modbus-TK registry map:
 
@@ -229,8 +212,9 @@ Each row configures a point on the device.
 
 Any additional columns will override the existed fields from ``register_map``.
 
-Sample Modbus-TK registry CSV files are checked into the VOLTTRON repository
-in ``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps``.
+Sample Modbus-TK registry CSV files for various devices may be found in `the maps directory of
+the volttron-lib-modbustk-driver repository <https://github.com/eclipse-volttron/volttron-lib-modbustk-driver/tree/develop/src/volttron/driver/interfaces/modbus_tk/utils/maps>`_.
+
 
 Here is a sample Modbus-TK registry configuration with defined ``register_map``:
 
@@ -254,9 +238,10 @@ Modbus-TK Driver Maps Repository
 ================================
 
 To help facilitate the creation of VOLTTRON device configuration entries (.config files) for Modbus-TK devices, a
-library of device type definitions is now maintained in
-``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps/maps.yaml``. A command-line tool (described
-below under ``MODBUS TK Config Command Tool``) uses the contents of ``maps.yaml`` while generating ``.config`` files.
+library of device type definitions is now maintained in `the maps directory of the volttron-lib-modbustk-driver repository
+<https://github.com/eclipse-volttron/volttron-lib-modbustk-driver/tree/develop/src/volttron/driver/interfaces/modbus_tk/utils/maps>`_.
+A command-line tool (described below under ``MODBUS TK Config Command Tool``) uses the contents of ``maps.yaml``
+while generating ``.config`` files.
 
 Each device type definition in ``maps.yaml`` consists of the following properties:
 
@@ -271,8 +256,8 @@ Each device type definition in ``maps.yaml`` consists of the following propertie
 A device type definition is a template for a device configuration. Some additional data must be supplied when a specific
 device's configuration is generated. In particular, the device_address must be supplied.
 
-A sample ``maps.yml`` file is checked into the VOLTTRON repository in
-``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps/maps.yaml``.
+A sample ``maps.yml`` file is checked into the VOLTTRON repository in `the maps directory of the volttron-lib-modbustk-driver repository
+<https://github.com/eclipse-volttron/volttron-lib-modbustk-driver/tree/develop/src/volttron/driver/interfaces/modbus_tk/utils/maps>`_.
 
 Here is a sample ``maps.yaml`` file:
 
@@ -304,9 +289,8 @@ Modbus-TK Config Command Tool
 ``config_cmd.py`` is a command-line tool for creating and maintaining VOLTTRON driver configurations. The tool
 runs from the command line:
 
-.. code-block:: shell
+.. code-block:: bash
 
-     $ cd services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps
      $ python config_cmd.py
 
 ``config_cmd.py`` supports the following commands:
@@ -315,8 +299,6 @@ runs from the command line:
     - ``quit`` - Quit the command-line tool.
     - ``list_directories`` - List all setup directories, with an option to edit their paths.
 
-        + By default, all directories are in the VOLTTRON repository
-          in ``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/maps``.
         + It is important to use the correct directories when adding/editing device types and driver configs,
           and when loading configurations into VOLTTRON.
 
@@ -348,5 +330,3 @@ runs from the command line:
     - ``delete_volttron_csv`` - Delete a registry csv config from VOLTTRON. VOLTTRON must be running
       when this command is used.
 
-The ``config_cmd.py`` module is checked into the VOLTTRON repository as
-``services/core/PlatformDriverAgent/platform_driver/interfaces/modbus_tk/config_cmd.py``.

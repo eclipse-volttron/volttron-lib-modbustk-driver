@@ -7,7 +7,7 @@ VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alte
 
 # Prerequisites
 
-* Python 3.10
+* Python 3.8
 
 # Installation
 
@@ -287,7 +287,7 @@ It is important to use the correct directories when adding/editing device types 
 
 Please see the following for contributing guidelines [contributing](https://github.com/eclipse-volttron/volttron-core/blob/develop/CONTRIBUTING.md).
 
-Please see the following helpful guide about [developing modular VOLTTRON agents](https://eclipse-volttron.readthedocs.io/en/latest/developing-volttron/developing-agents/agent-development.html)
+Please see the following helpful guide about [developing modular VOLTTRON agents](https://github.com/eclipse-volttron/volttron-core/blob/develop/DEVELOPING_ON_MODULAR.md)
 
 
 # Disclaimer Notice
