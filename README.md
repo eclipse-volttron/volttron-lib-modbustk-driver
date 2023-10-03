@@ -1,5 +1,8 @@
 # volttron-lib-modbustk-driver
 
+[![Eclipse VOLTTRON™](https://img.shields.io/badge/Eclips%20VOLTTRON--red.svg)](https://eclipse-volttron.readthedocs.io/en/latest/)
+![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
+![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
 ![Passing?](https://github.com/VOLTTRON/volttron-lib-modbustk-driver/actions/workflows/run-tests.yml/badge.svg)
 [![pypi version](https://img.shields.io/pypi/v/volttron-lib-modbustk-driver.svg)](https://pypi.org/project/volttron-lib-modbustk-driver/)
 
@@ -7,10 +10,12 @@ VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alte
 
 ## Requires
 
-* python >=3.10
+* python >= 3.10
 * volttron-lib-base-driver
-* pymodbus >= 2.3.5
-
+* pymodbus >= 2.3.5 
+* modbus-tk >= 1.1.3 
+* pyserial = >= 3.5 
+* PyYAML = >= 6.0
 
 # Documentation
 More detailed documentation can be found on [ReadTheDocs](https://eclipse-volttron.readthedocs.io/en/latest/external-docs/volttron-platform-driver/docs/source/index.html). The RST source
