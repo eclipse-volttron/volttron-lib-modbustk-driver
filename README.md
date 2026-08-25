@@ -1,124 +1,26 @@
 # volttron-lib-modbustk-driver
 
-![Eclipse VOLTTRON™](https://img.shields.io/badge/Eclipse%20VOLTTRON™--red.svg)
+[![Eclipse VOLTTRON™](https://img.shields.io/badge/Eclips%20VOLTTRON--red.svg)](https://eclipse-volttron.readthedocs.io/en/latest/)
 ![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
 ![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
-[![Passing?](https://github.com/VOLTTRON/volttron-lib-modbustk-driver/actions/workflows/run-tests.yml/badge.svg)]
-[![pypi version](https://img.shields.io/pypi/v/volttron-lib-modbustk-driver.svg)](https://pypi.org/project/volttron-lib-modbustk-driver/)]
+![Passing?](https://github.com/VOLTTRON/volttron-lib-modbustk-driver/actions/workflows/run-tests.yml/badge.svg)
+[![pypi version](https://img.shields.io/pypi/v/volttron-lib-modbustk-driver.svg)](https://pypi.org/project/volttron-lib-modbustk-driver/)
 
-## Prerequisites
+VOLTTRON’s Modbus-TK driver, built on the Python Modbus-TK library, is an alternative to the original VOLTTRON modbus driver. Unlike the original modbus driver, the Modbus-TK driver supports Modbus RTU as well as Modbus over TCP/IP.
 
-* Python 3.10+
-* Eclipse VOLTTRON<sup>tm</sup> 10.0+
+## Requires
 
-### Python
-
-<details>
-<summary>To install Python 3.10, we recommend using <a href="https://github.com/pyenv/pyenv"><code>pyenv</code></a>.</summary>
-
-```bash
-# install pyenv
-git clone https://github.com/pyenv/pyenv ~/.pyenv
-
-# setup pyenv (you should also put these three lines in .bashrc or similar)
-export PATH="${HOME}/.pyenv/bin:${PATH}"
-export PYENV_ROOT="${HOME}/.pyenv"
-eval "$(pyenv init -)"
-
-# install Python 3.8
-pyenv install 3.10
-
-# make it available globally
-pyenv global system 3.10
-```
-</details>
-
-
-### Poetry
-
-This project uses `poetry` to install and manage dependencies. To install poetry,
-follow these [instructions](https://python-poetry.org/docs/master/#installation).
-
-# Installation
-
-With `pip`:
-
-```shell
-python3.10 -m pip install volttron-lib-modbustk-driver
-
-# Develop mode
-python3.10 -m pip install --editable volttron-lib-modbustk-driver
-```
-
-## Development
-
-### Environment
-
-Set the environment to be in your project directory:
-
-```poetry config virtualenvs.in-project true```
-
-If you want to install all your dependencies, including dependencies to help with developing your agent, run this command:
-
-```poetry install```
-
-If you want to install only the dependencies needed to run your agent, run this command:
-
-```poetry install --no-dev```
-
-Activate the virtual environment:
-
-```shell
-# using Poetry
-poetry shell
-
-# using 'source' command
-source "$(poetry env info --path)/bin/activate"
-```
-
-### Source Control
-
-1. To use git to manage version control, create a new git repository in your local agent project.
-
-```git init```
-
-2. Then create a new repo in your Github or Gitlab account. Copy the URL that points to that new repo in
-your Github or Gitlab account. This will be known as our 'remote'.
-
-3. Add the remote (i.e. the new repo URL from your Github or Gitlab account) to your local repository. Run the following command:
-
-```git remote add origin <my github/gitlab URL>```
-
-When you push to your repo, note that the default branch is called 'main'.
-
-
-### Optional Configurations
-
-#### Precommit
-
-Note: Ensure that you have created the virtual environment using Poetry
-
-Install pre-commit hooks:
-
-```poetry run pre-commit install```
-
-To run pre-commit on all your files, run this command:
-
-```poetry run pre-commit run --all-files```
-
-If you have precommit installed and you want to ignore running the commit hooks
-every time you run a commit, include the `--no-verify` flag in your commit. The following
-is an example:
-
-```git commit -m "Some message" --no-verify```
-
-
-## Documentation
-
+* python >= 3.10
+* volttron-lib-base-driver
+* pymodbus >= 2.3.5 
+* modbus-tk >= 1.1.3 
+* pyserial = >= 3.5 
+* PyYAML = >= 6.0
 
 # Documentation
-More detailed documentation can be found on [ReadTheDocs](https://volttron.readthedocs.io/en/modular/). The RST source
+More detailed documentation can be found on [ReadTheDocs](https://eclipse-volttron.readthedocs.io/en/latest/external-docs/volttron-platform-driver/docs/source/index.html). The RST source
 of the documentation for this component is located in the "docs" directory of this repository.
+
 
 # Installation
 
@@ -131,14 +33,14 @@ Information on how to install of the VOLTTRON platform can be found
     ```shell
     vctl install volttron-platform-driver --vip-identity platform.driver --start
     ```
-
-1. Install the volttron-lib-modbustk-driver library.
+   
+2. Install the volttron-lib-modbustk-driver library.
 
     ```shell
     pip install volttron-lib-modbustk-driver
     ```
 
-1. Install the driver onto the Platform Driver.
+3. Install the driver onto the Platform Driver.
 
     Installing a driver in the Platform Driver Agent requires adding copies of the device configuration and registry configuration files to the Platform Driver’s configuration store.
 
@@ -149,7 +51,7 @@ Information on how to install of the VOLTTRON platform can be found
     cd config
     ```
 
-1. Add driver configurations to the Platform Driver.
+4. Add driver configurations to the Platform Driver.
 
    The Modbus-TK driver is mostly backward-compatible with the parameter definitions in the original Modbus driver’s configuration (.config and .csv files). If the config file’s parameter names use the Modbus driver’s name conventions, they are translated to the Modbus-TK name conventions, e.g. a Modbus CSV file’s Point Address is interpreted as a Modbus-TK “Address”. Backward-compatibility exceptions are:
 
@@ -230,7 +132,7 @@ Information on how to install of the VOLTTRON platform can be found
     vctl config store platform.driver devices/modbustk modbus_tk_example.config
     ```
 
-1. Add a Modbus-TK Register Map CSV File to the Platform Driver.
+5. Add a Modbus-TK Register Map CSV File to the Platform Driver.
 
     Modbus TK requires an additional registry configuration file compared to the paradigm of most other drivers. The registry map file is an analogue to the typical registry configuration file. The registry configuration file is a simple file which maps device point names to user specified point names.
 
@@ -289,7 +191,7 @@ Information on how to install of the VOLTTRON platform can be found
     vctl config store platform.driver modbus_tk_test_map.csv modbus_tk_test_map.csv --csv
     ```
 
-1. Add a registry configuration to the PlatformDriver.
+6. Add a registry configuration to the PlatformDriver.
 
     The registry configuration file is a CSV file. Each row configures a point on the device.
 
@@ -320,7 +222,7 @@ Information on how to install of the VOLTTRON platform can be found
     vctl config store platform.driver modbus_tk_test.csv modbus_tk_test.csv --csv
     ```
 
-1. Observe Data
+7. Observe Data
 
     To see data being published to the bus, install a [Listener Agent](https://pypi.org/project/volttron-listener/):
 
